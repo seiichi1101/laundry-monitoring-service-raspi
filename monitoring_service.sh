@@ -13,7 +13,7 @@ do
 	NOW_SEC=`date "+%S"`
 	echo `/bin/date "+%Y-%m-%d %H:%M:%S"` ": Start taking photo" && 
 	mkdir -p /tmp/laundry_monitoring_service/ &&
-	raspistill -o /tmp/laundry_monitoring_service/${NOW_MIN}-${NOW_SEC}.jpeg -w 320 -h 240 -q 10 &&
+	raspistill -o /tmp/laundry_monitoring_service/${NOW_MIN}-${NOW_SEC}.jpeg -w 480 -h 360 -q 10 &&
 	echo `/bin/date "+%Y-%m-%d %H:%M:%S"` ": Done taking photo" && 
 #	sleep 3 &&
 	echo `/bin/date "+%Y-%m-%d %H:%M:%S"` ": Start gzip photo" && 
