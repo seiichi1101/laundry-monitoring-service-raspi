@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # 参考サイト: https://qiita.com/isann_tech/items/778a8fc71a5c57bff72d
 
 import traceback
