@@ -22,7 +22,7 @@ JST = timezone(timedelta(hours=+9), 'JST')
 s3_client = boto3.client('s3', region_name='ap-northeast-1')
 
 def take_photo(stream, file_name):
-    print("...taking photo")
+    print("...taking photo", file=codecs.open(f'motion_sensor.log', 'w', 'utf-8'))
     with picamera.PiCamera() as camera:
         camera.resolution = (1024, 768)
         # camera.brightness = 70
@@ -31,13 +31,13 @@ def take_photo(stream, file_name):
         camera.capture(stream, 'png')
 
 def compress_png(stream, file_name):
-    print("...compressing photo")
+    print("...compressing photo", file=codecs.open(f'motion_sensor.log', 'w', 'utf-8'))
     target=f'photos/{file_name}.png'
     with open(target, 'rb') as img:
         t = zlib.compress(img.read())
 
 def upload_photo(stream, file_name):
-    print("...uploading photo")
+    print("...uploading photo", file=codecs.open(f'motion_sensor.log', 'w', 'utf-8'))
     stream.seek(0)
     key_prefix=file_name.replace("-","/")
 #    s3_client.upload_file(
@@ -61,23 +61,24 @@ def upload_photo(stream, file_name):
 
 if __name__ == '__main__':
     try:
-        print ("CTRL+C to exit")
+        print(f"=====start {datetime.now(JST).isoformat() }=====", file=codecs.open(f'motion_sensor.log', 'w', 'utf-8'))
+        print ("CTRL+C to exit", file=codecs.open(f'motion_sensor.log', 'w', 'utf-8'))
         start = time.time()
         while True:
             if(GPIO.input(GPIO_PIN) == GPIO.HIGH):
-                print("elapsed_time: ", int(time.time()-start))
+                print("elapsed_time: ", int(time.time()-start), file=codecs.open(f'motion_sensor.log', 'w', 'utf-8'))
                 stream = io.BytesIO()
                 current_datetime = datetime.now(JST).strftime("%Y-%m-%d-%H-%M-%S")
                 take_photo(stream, current_datetime)
                 # compress_png(stream, current_datetime)
                 upload_photo(stream, current_datetime)
-                print("...removing photo")
+                print("...removing photo", file=codecs.open(f'motion_sensor.log', 'w', 'utf-8'))
                 # shutil.rmtree('./photos/')
                 # os.mkdir('photos')
                 stream.close()
 #            time.sleep(SLEEPTIME)
     except KeyboardInterrupt:
-        print("Quit")
+        print("Quit", file=codecs.open(f'motion_sensor.log', 'w', 'utf-8'))
     finally:
         GPIO.cleanup()
 
